@@ -89,6 +89,12 @@ void LCD_Sprite(int x, int y, int width, int height, unsigned char bitmap[],int 
 
 //extern uint8_t humedad[];
 extern uint8_t termometro[];
+extern uint8_t tile[];
+extern uint8_t bombette[];
+extern uint8_t sol[];
+extern uint8_t nube[];
+extern uint8_t kooper[];
+
 
 //Configuracion
 void setup() {
@@ -123,19 +129,25 @@ void setup() {
   GPIOPadConfigSet(GPIO_PORTB_BASE, 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7, GPIO_STRENGTH_8MA, GPIO_PIN_TYPE_STD_WPU);
   Serial.println("Inicio");
   LCD_Init();
-  LCD_Clear(0xffff); //00 es negro, 0xffff es blanco
+  LCD_Clear(0x3EDE); //00 es negro, 0xffff es blanco
   
   //Mostrar mensajes e imágenes iniciales en la LCD
-  FillRect(35, 70, 150, 20, 0xF47C);
-  String text1 = "Temperatura";
+  //FillRect(35, 70, 150, 20, 0xF47C);
+  String text1 = "Bienvenido";
+  String text2 = "Mide la temperatura por favor!";
   //String text3 = "Humedad";
-  LCD_Print(text1, 5, 45, 2, 0x00,0xffff);
+  LCD_Print(text1, 5, 45, 2, 0x00,0x3EDE);
+  LCD_Print(text2, 5, 85, 1, 0x00,0x3EDE);
   //LCD_Print(text3, 135, 160, 2, 0x00,0xffff);
   //LCD_Sprite(int x, int y, int width, int height, unsigned char bitmap[],int columns, int index, char flip, char offset);
     
   //LCD_Bitmap(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned char bitmap[]);
-  LCD_Bitmap(200, 0, 120, 120, termometro);
-  //LCD_Bitmap(0,120,120,120, humedad);
+  //LCD_Bitmap(200, 0, 120, 120, termometro);
+  for(int x = 0; x <319; x++){ 
+    LCD_Bitmap(x, 207, 16, 16, tile);
+    LCD_Bitmap(x, 223, 16, 16, tile);
+    x += 15;
+  }
 
 }
 
@@ -179,19 +191,47 @@ void loop() {
      tempFloat = temp.toFloat();
      Serial.println("Temperatura en float: ");
      Serial.println(tempFloat);
-     if (tempFloat > 24.00){
-      FillRect(35, 70, 150, 20, 0xF924);
+     //Calor
+     if (tempFloat > 23.90){
+      LCD_Clear(0x3EDE);
+      for(int x = 0; x <319; x++){ 
+        LCD_Bitmap(x, 207, 16, 16, tile);
+        LCD_Bitmap(x, 223, 16, 16, tile);
+        x += 15;
+      }
+      delay(500);
+      for (int x = 0; x<320-40; x++){
+        delay(15);
+        int anim2 = (x/10)%3;
+        int anim3 = (x/11)%1;
+        LCD_Sprite(x,160,40,40,bombette,3,anim2,0,1);
+        V_line(x-1, 160,40,0x3EDE);
+        LCD_Sprite(x-40,160,40,40,sol,1,anim2,0,1);
+        V_line(x-3, 160,40,0x3EDE);
+      }
      }
-     else if (tempFloat<24.00 && tempFloat > 22.80){
-      FillRect(35, 70, 150, 20, 0x5FAB);
+     //templado
+     else if (tempFloat<23.90 && tempFloat > 22.80){
+      LCD_Clear(0x3EDE);
+      for(int x = 0; x <319; x++){ 
+        LCD_Bitmap(x, 207, 16, 16, tile);
+        LCD_Bitmap(x, 223, 16, 16, tile);
+        x += 15;
+      }
      }
+     //frio
      else if (tempFloat<22.80){
-      FillRect(35, 70, 150, 20, 0x57BC);
+      LCD_Clear(0x3EDE);
+      for(int x = 0; x <319; x++){ 
+        LCD_Bitmap(x, 207, 16, 16, tile);
+        LCD_Bitmap(x, 223, 16, 16, tile);
+        x += 15;
+      }
      }
      Serial.println(temp);
-     LCD_Print(temp, 80, 75, 1.99, 0x00,0xffff);
+     LCD_Print(temp, 80, 75, 1.99, 0x00,0x3EDE);
      //Serial.println(hum);
-     //LCD_Print(hum, 155, 190, 1.99, 0x00,0xffff);
+     //LCD_Print(hum, 155, 190, 1.99, 0x00,0x3EDE);
      delay(300);
    
   }
@@ -220,6 +260,39 @@ void loop() {
   }
 
 }
+
+/*
+void moverseFrio(void){
+  for (int x = 0; x<320-40; x++){
+    delay(15);
+    int anim2 = (x/10)%3;
+    LCD_Sprite(x,100,40,40,bombette,3,anim2,0,1);
+    LCD_Sprite(x-1,100,40,40,nube,3,anim2,0,1);
+    V_line(x-2, 100,40,0x3EDE);
+  }
+}
+
+void moverseCalor(void){
+  for (int x = 0; x<320-40; x++){
+    delay(15);
+    int anim2 = (x/10)%3;
+    LCD_Sprite(x,100,40,40,bombette,3,anim2,0,1);
+    LCD_Sprite(x-1,100,40,40,sol,3,anim2,0,1);
+    V_line(x-2, 100,40,0x3EDE);
+  }
+}
+
+void moverseTemplado(void){
+  for (int x = 0; x<320-40; x++){
+    delay(15);
+    int anim2 = (x/10)%3;
+    LCD_Sprite(x,100,40,40,bombette,3,anim2,0,1);
+    LCD_Sprite(x-1,100,40,40,kooper,3,anim2,0,1);
+    V_line(x-2, 100,40,0x3EDE);
+    
+  }
+}
+*/
 
 
 //***************************************************************************************************************************************
