@@ -19,6 +19,7 @@ void setup()
   Serial.begin(115200);
   Serial2.begin(115200);
   Wire.begin();
+  Serial.println("Inicio exitoso!");
 }
 
 //Loop principal
@@ -40,6 +41,7 @@ void loop()
     char bufferTiva = Serial2.read();
     //Si este corresponde a la letra m, enviar los datos de temperatura y humedad
     //concatenados en un string separado por una coma
+    Serial.println("Disponible");
     if (bufferTiva == 'm')
     {
       Serial.println("\nEnviando temperatura");
