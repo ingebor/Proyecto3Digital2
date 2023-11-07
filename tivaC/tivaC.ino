@@ -153,21 +153,6 @@ void loop() {
     Serial2.println("m");
     delay(300);
     presionado2 = 0;
-    /*
-    //Reproducir melodia de buzzer
-    for (int thisNote = 0; thisNote < 4; thisNote++) {
-
-      // to calculate the note duration, take one second divided by the
-      // note type. quarter note = 1000 / 4, eighth note = 1000/8, etc.
-      int noteDuration = 1000/noteDurations[thisNote];
-      tone(buzzerPin, melody[thisNote], noteDuration);
-  
-      int pauseBetweenNotes = noteDuration + 50; // delay between pulse
-      delay(pauseBetweenNotes);
-  
-      noTone(buzzerPin); // stop the tone playing
-    }
-    */
   }
 
   //Leer valores de temperatura y humedad
@@ -216,23 +201,11 @@ void loop() {
     presionado1 = 1;
   }
   if(buttonState1 == 1 && presionado1 == 1){
+    Serial.println("Guardando");
+    Serial2.println("x");
+    delay(300);
     archivo = SD.open("proyecto.txt", FILE_WRITE);
     if(archivo){
-      /*
-      //Melodia buzzer
-      for (int thisNote = 0; thisNote < 4; thisNote++) {
-        // to calculate the note duration, take one second divided by the
-        // note type. quarter note = 1000 / 4, eighth note = 1000/8, etc.
-        int noteDuration = 1000/noteDurations[thisNote];
-        tone(buzzerPin, melody2[thisNote], noteDuration);
-    
-        int pauseBetweenNotes = noteDuration + 50; // delay between pulse
-        delay(pauseBetweenNotes);
-    
-        noTone(buzzerPin); // stop the tone playing
-        
-      }
-      */
       //Subir datos a SD
       Serial.println("Subiendo a SD: ");
       Serial.println(enviarArchivo);

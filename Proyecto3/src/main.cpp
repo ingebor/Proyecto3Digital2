@@ -17,6 +17,9 @@ Adafruit_NeoPixel circle(CIRCLE_LEDS, CIRCLE, NEO_GRB + NEO_KHZ800);
 
 // Variables globales
 int valorSensor = 0;
+uint8_t red = 0;
+uint8_t green = 0;
+uint8_t blue = 0;
 
 Generic_LM75 temperature;
 
@@ -32,6 +35,17 @@ void setup()
   circle.setBrightness(BRIGHTNESS);
 
   Serial.println("Inicio exitoso!");
+  red = 0;
+  green = 255;
+  blue = 0;
+  circle.clear();
+
+  for (int i = CIRCLE_LEDS - 1; i >= 0; i--)
+  {
+    circle.setPixelColor(i, red, green, blue);
+    circle.show();
+    delay(50);
+  }
 }
 
 // Loop principal
@@ -56,6 +70,21 @@ void loop()
     // Serial.println("Disponible");
     if (bufferTiva == 'm')
     {
+      red = 0;
+      green = 255;
+      blue = 0;
+      circle.clear();
+      for (int i = 0; i < CIRCLE_LEDS; i++)
+      {
+        circle.setPixelColor(i, red, green, blue);
+        circle.show();
+        delay(40);
+        blue = blue + 12;
+        red = red - 12;
+      }
+      delay(1000);
+      circle.clear();
+      circle.show();
       Serial.println("\nEnviando temperatura");
       Serial.print(F("Temperatura: "));
       Serial.print(t);
@@ -64,48 +93,25 @@ void loop()
       Serial2.println(temp);
       delay(300);
     }
-  }
+    if (bufferTiva == 'x')
+    {
+      red = 0;
+      green = 0;
+      blue = 255;
+      circle.clear();
 
-  uint8_t red = 255;
-  uint8_t green = 0;
-  uint8_t blue = 0;
-
-  // Make the colours change as we go round the circle
-  for (int i = 0; i < CIRCLE_LEDS; i++)
-  {
-    circle.setPixelColor(i, red, green, blue);
-    circle.show();
-    delay(40);
-    blue = blue + 12;
-    red = red - 12;
-  }
-
-   // Change colours and go round the circle the other way
-    red   = 0;
-    green = 255;
-    blue  = 0;
-    circle.clear();
-
-    for (int i = CIRCLE_LEDS - 1; i >= 0; i--) {
-        circle.setPixelColor(i, red, green, blue);
-        circle.show();
-        delay(50);
-    }
-
-    // And again
-    green = 0;
-    blue  = 255;
-    circle.clear();
-
-    for (int i = 0; i < CIRCLE_LEDS; i++) {
+      for (int i = 0; i < CIRCLE_LEDS; i++)
+      {
         circle.setPixelColor(i, red, green, blue);
         circle.show();
         delay(30);
         green += 8;
+      }
+      delay(1000);
+      // Clear down the circle LEDs and start again
+      circle.clear();
+      circle.show();
     }
-
-    // Clear down the circle LEDs and start again
-    circle.clear();
-    circle.show();
+  }
 
 }
