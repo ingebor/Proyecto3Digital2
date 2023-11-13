@@ -42,12 +42,9 @@ int presionado1 = 0;
 int presionado2 = 0;
 String inByte = "";
 String temp = "";
-//String hum = "";
 File archivo;
 String enviarArchivo = "";
-//int buzzerPin = 37;
 float tempFloat = 0.00;
-//float humFloat = 0.00;
 
 /************************************************************************
  * Prototipos de funciones
@@ -67,8 +64,7 @@ void LCD_Bitmap(unsigned int x, unsigned int y, unsigned int width, unsigned int
 void LCD_Sprite(int x, int y, int width, int height, unsigned char bitmap[],int columns, int index, char flip, char offset);
 
 
-//extern uint8_t humedad[];
-extern uint8_t termometro[];
+
 extern uint8_t tile[];
 extern uint8_t bombette[];
 extern uint8_t sol[];
