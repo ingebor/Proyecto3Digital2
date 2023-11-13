@@ -25,14 +25,6 @@
 #include "font.h"
 #include "lcd_registers.h"
 
-/*
-// define your pitch constants
-#define NOTE_C4  262
-#define NOTE_A6  1760
-#define NOTE_C5  523
-#define NOTE_C7  2093
-*/
-
 #define LCD_RST PD_0
 #define LCD_CS PD_1
 #define LCD_RS PD_2
@@ -56,18 +48,6 @@ String enviarArchivo = "";
 //int buzzerPin = 37;
 float tempFloat = 0.00;
 //float humFloat = 0.00;
-
-/*
-int melody[] = {
-  NOTE_C4,NOTE_C5,NOTE_A6,NOTE_C7
-};
-int noteDurations[] = {
-  4,4,4,4
-};
-int melody2[] = {
-  NOTE_C7,NOTE_A6,NOTE_C5,NOTE_C4
-};
-*/
 
 /************************************************************************
  * Prototipos de funciones
@@ -132,17 +112,12 @@ void setup() {
   LCD_Clear(0x3EDE); //00 es negro, 0xffff es blanco
   
   //Mostrar mensajes e imágenes iniciales en la LCD
-  //FillRect(35, 70, 150, 20, 0xF47C);
   String text1 = "Bienvenido";
   String text2 = "Mide la temperatura por favor!";
-  //String text3 = "Humedad";
   LCD_Print(text1, 5, 45, 2, 0x00,0x3EDE);
   LCD_Print(text2, 5, 85, 1, 0x00,0x3EDE);
-  //LCD_Print(text3, 135, 160, 2, 0x00,0xffff);
-  //LCD_Sprite(int x, int y, int width, int height, unsigned char bitmap[],int columns, int index, char flip, char offset);
     
   //LCD_Bitmap(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned char bitmap[]);
-  //LCD_Bitmap(200, 0, 120, 120, termometro);
   for(int x = 0; x <319; x++){ 
     LCD_Bitmap(x, 207, 16, 16, tile);
     LCD_Bitmap(x, 223, 16, 16, tile);
@@ -167,7 +142,7 @@ void loop() {
     presionado2 = 0;
   }
 
-  //Leer valores de temperatura y humedad
+  //Leer valores de temperatura 
    while (Serial2.available()){
    delay(10);
    if (Serial2.available()>0){
@@ -179,7 +154,6 @@ void loop() {
     Serial.println(inByte);
     //Separar valores
     temp = inByte.substring(0,5);
-    //hum = inByte.substring(6,11);
     //Variable en la que se almacenarán los datos para poder enviar a la SD
     enviarArchivo = inByte;
     //Reiniciar variable para volver a recibir datos
@@ -187,12 +161,39 @@ void loop() {
     //Preparar variables para mostrarlas en pantalla
      inByte = "";
      temp = temp+"*C";
-     //hum = hum+"%";
      tempFloat = temp.toFloat();
      Serial.println("Temperatura en float: ");
      Serial.println(tempFloat);
+     String msjCalor = "Que calor! Corre del sol";
+     String msjTemplado = "Esta templado! Vamos a caminar";
+     String msjFrio = "Que frio! Mira esa nube!";
      //Calor
-     if (tempFloat > 23.90){
+     if (tempFloat > 27.90){
+      //Limpiar pantalla 
+      LCD_Clear(0x3EDE);
+      //Mostrar cuadros
+      for(int x = 0; x <319; x++){ 
+        LCD_Bitmap(x, 207, 16, 16, tile);
+        LCD_Bitmap(x, 223, 16, 16, tile);
+        x += 15;
+      }
+      delay(500);
+      //Mostrar animacion
+      for (int x = 0; x<320-40; x++){
+        delay(15);
+        int anim2 = (x/10)%3; //3 porque son 3 columnas
+        int anim3 = (x/11)%1;
+        LCD_Sprite(x,160,40,40,bombette,3,anim2,0,1);
+        V_line(x-1, 160,40,0x3EDE);
+        LCD_Sprite(x-40,160,40,40,sol,1,anim3,0,1);
+        V_line(x-41, 160,40,0x3EDE);
+      }
+      delay(500);
+      LCD_Print(msjCalor, 55, 55, 1.99, 0x00,0x3EDE);
+     }
+     //templado
+     else if (tempFloat<27.90 && tempFloat > 26.90){
+      //Limpiar pantalla
       LCD_Clear(0x3EDE);
       for(int x = 0; x <319; x++){ 
         LCD_Bitmap(x, 207, 16, 16, tile);
@@ -200,38 +201,45 @@ void loop() {
         x += 15;
       }
       delay(500);
+      //Mostrar animacion
+      for (int x = 0; x<320-40; x++){
+        delay(15);
+        int anim2 = (x/10)%3;
+        int anim3 = (x/11)%4; //4 porque son 4 columnas
+        LCD_Sprite(x,160,40,40,bombette,3,anim2,0,1);
+        V_line(x-1, 160,40,0x3EDE); //Agregamos una línea detrás de bombette
+        LCD_Sprite(x-40,160,40,40,kooper,4,anim3,0,1);
+        V_line(x-40, 160,40,0x3EDE);
+      }
+      delay(500);
+      LCD_Print(msjTemplado, 55, 55, 1.99, 0x00,0x3EDE);
+     }
+     //frio
+     else if (tempFloat<26.90){
+      //Limpiar pantalla
+      LCD_Clear(0x3EDE);
+      for(int x = 0; x <319; x++){ 
+        LCD_Bitmap(x, 207, 16, 16, tile);
+        LCD_Bitmap(x, 223, 16, 16, tile);
+        x += 15;
+      }
+      delay(500);
+      //Mostrar animacion
       for (int x = 0; x<320-40; x++){
         delay(15);
         int anim2 = (x/10)%3;
         int anim3 = (x/11)%1;
         LCD_Sprite(x,160,40,40,bombette,3,anim2,0,1);
         V_line(x-1, 160,40,0x3EDE);
-        LCD_Sprite(x-40,160,40,40,sol,1,anim2,0,1);
-        V_line(x-3, 160,40,0x3EDE);
+        LCD_Sprite(x-40,160,40,40,nube,1,anim3,0,1);
+        V_line(x-40, 160,40,0x3EDE);
       }
+      delay(500);
+      LCD_Print(msjFrio, 65, 55, 1.99, 0x00,0x3EDE);
      }
-     //templado
-     else if (tempFloat<23.90 && tempFloat > 22.80){
-      LCD_Clear(0x3EDE);
-      for(int x = 0; x <319; x++){ 
-        LCD_Bitmap(x, 207, 16, 16, tile);
-        LCD_Bitmap(x, 223, 16, 16, tile);
-        x += 15;
-      }
-     }
-     //frio
-     else if (tempFloat<22.80){
-      LCD_Clear(0x3EDE);
-      for(int x = 0; x <319; x++){ 
-        LCD_Bitmap(x, 207, 16, 16, tile);
-        LCD_Bitmap(x, 223, 16, 16, tile);
-        x += 15;
-      }
-     }
+     //Mostrar valor de temperatura
      Serial.println(temp);
      LCD_Print(temp, 80, 75, 1.99, 0x00,0x3EDE);
-     //Serial.println(hum);
-     //LCD_Print(hum, 155, 190, 1.99, 0x00,0x3EDE);
      delay(300);
    
   }
@@ -260,39 +268,6 @@ void loop() {
   }
 
 }
-
-/*
-void moverseFrio(void){
-  for (int x = 0; x<320-40; x++){
-    delay(15);
-    int anim2 = (x/10)%3;
-    LCD_Sprite(x,100,40,40,bombette,3,anim2,0,1);
-    LCD_Sprite(x-1,100,40,40,nube,3,anim2,0,1);
-    V_line(x-2, 100,40,0x3EDE);
-  }
-}
-
-void moverseCalor(void){
-  for (int x = 0; x<320-40; x++){
-    delay(15);
-    int anim2 = (x/10)%3;
-    LCD_Sprite(x,100,40,40,bombette,3,anim2,0,1);
-    LCD_Sprite(x-1,100,40,40,sol,3,anim2,0,1);
-    V_line(x-2, 100,40,0x3EDE);
-  }
-}
-
-void moverseTemplado(void){
-  for (int x = 0; x<320-40; x++){
-    delay(15);
-    int anim2 = (x/10)%3;
-    LCD_Sprite(x,100,40,40,bombette,3,anim2,0,1);
-    LCD_Sprite(x-1,100,40,40,kooper,3,anim2,0,1);
-    V_line(x-2, 100,40,0x3EDE);
-    
-  }
-}
-*/
 
 
 //***************************************************************************************************************************************

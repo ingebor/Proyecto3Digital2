@@ -56,7 +56,7 @@ void loop()
   // Si no se pudo obtener los valores, mostrar un mensaje de advertencia
   if (isnan(t))
   {
-    Serial.println(F("Failed to read from LM75 sensor!"));
+    Serial.println(F("No se pudo leer del sensor LM75!"));
     return;
   }
 
@@ -65,17 +65,17 @@ void loop()
   {
     // leer el mensaje proveniente de la Tiva C
     char bufferTiva = Serial2.read();
-    // Si este corresponde a la letra m, enviar los datos de temperatura y humedad
-    // concatenados en un string separado por una coma
-    // Serial.println("Disponible");
+    // Si este corresponde a la letra m, enviar los datos de temperatura
     if (bufferTiva == 'm')
     {
-      red = 0;
-      green = 255;
+      red = 255;
+      green = 0;
       blue = 0;
       circle.clear();
+      //Iluminar en circulo
       for (int i = 0; i < CIRCLE_LEDS; i++)
       {
+        //Mostrar colores correspondientes en neopixel
         circle.setPixelColor(i, red, green, blue);
         circle.show();
         delay(40);
@@ -93,13 +93,15 @@ void loop()
       Serial2.println(temp);
       delay(300);
     }
+    //Si guardan los datos en la SD, se recibe el valor x
+    //en ese caso, iluminar del color correspondiente
     if (bufferTiva == 'x')
     {
       red = 0;
       green = 0;
       blue = 255;
       circle.clear();
-
+      //Iluminar en circulo
       for (int i = 0; i < CIRCLE_LEDS; i++)
       {
         circle.setPixelColor(i, red, green, blue);
