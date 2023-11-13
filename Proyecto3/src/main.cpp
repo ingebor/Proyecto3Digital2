@@ -91,15 +91,52 @@ void loop()
       Serial.println(F("°C "));
       String temp = String(t);
       Serial2.println(temp);
+      if(t>27.90){
+        red = 255;
+        green = 0;
+        blue = 0;
+        circle.clear();
+        for (int i = CIRCLE_LEDS - 1; i >= 0; i--)
+        {
+          circle.setPixelColor(i, red, green, blue);
+          circle.show();
+          delay(50);
+        }
+      }
+      else if(t<27.9 && t>26.9){
+        red = 0;
+        green = 255;
+        blue = 0;
+        circle.clear();
+        for (int i = CIRCLE_LEDS - 1; i >= 0; i--)
+        {
+          circle.setPixelColor(i, red, green, blue);
+          circle.show();
+          delay(50);
+        }
+      }
+      else if(t<26.9){
+        red = 0;
+        green = 0;
+        blue = 200;
+        circle.clear();
+        for (int i = CIRCLE_LEDS - 1; i >= 0; i--)
+        {
+          circle.setPixelColor(i, red, green, blue);
+          circle.show();
+          delay(50);
+        }
+      }
+      circle.show();
       delay(300);
     }
     //Si guardan los datos en la SD, se recibe el valor x
     //en ese caso, iluminar del color correspondiente
     if (bufferTiva == 'x')
     {
-      red = 0;
+      red = 200;
       green = 0;
-      blue = 255;
+      blue = 200;
       circle.clear();
       //Iluminar en circulo
       for (int i = 0; i < CIRCLE_LEDS; i++)
@@ -111,7 +148,6 @@ void loop()
       }
       delay(1000);
       // Clear down the circle LEDs and start again
-      circle.clear();
       circle.show();
     }
   }

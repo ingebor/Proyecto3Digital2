@@ -160,9 +160,12 @@ void loop() {
      tempFloat = temp.toFloat();
      Serial.println("Temperatura en float: ");
      Serial.println(tempFloat);
-     String msjCalor = "Que calor! Corre del sol";
-     String msjTemplado = "Esta templado! Vamos a caminar";
-     String msjFrio = "Que frio! Mira esa nube!";
+     String msjCalor = "Que calor! Corre";
+     String msjCalor2 = "del sol!";
+     String msjTemplado = "Esta templado!";
+     String msjTemplado2 = "Vamos a caminar!";
+     String msjFrio = "Que frio! Mira esa";
+     String msjFrio2 = "nube!";
      //Calor
      if (tempFloat > 27.90){
       //Limpiar pantalla 
@@ -185,7 +188,8 @@ void loop() {
         V_line(x-41, 160,40,0x3EDE);
       }
       delay(500);
-      LCD_Print(msjCalor, 55, 55, 1.99, 0x00,0x3EDE);
+      LCD_Print(msjCalor, 5, 55, 2, 0x00,0x3EDE);
+      LCD_Print(msjCalor2, 5, 75, 2, 0x00,0x3EDE);
      }
      //templado
      else if (tempFloat<27.90 && tempFloat > 26.90){
@@ -208,7 +212,8 @@ void loop() {
         V_line(x-40, 160,40,0x3EDE);
       }
       delay(500);
-      LCD_Print(msjTemplado, 55, 55, 1.99, 0x00,0x3EDE);
+      LCD_Print(msjTemplado, 5, 55, 2, 0x00,0x3EDE);
+      LCD_Print(msjTemplado2, 5, 75, 2, 0x00,0x3EDE);
      }
      //frio
      else if (tempFloat<26.90){
@@ -231,11 +236,12 @@ void loop() {
         V_line(x-40, 160,40,0x3EDE);
       }
       delay(500);
-      LCD_Print(msjFrio, 65, 55, 1.99, 0x00,0x3EDE);
+      LCD_Print(msjFrio, 5, 55, 2, 0x00,0x3EDE);
+      LCD_Print(msjFrio2, 5, 75, 2, 0x00,0x3EDE);
      }
      //Mostrar valor de temperatura
      Serial.println(temp);
-     LCD_Print(temp, 80, 75, 1.99, 0x00,0x3EDE);
+     LCD_Print(temp, 80, 95, 2, 0x00,0x3EDE);
      delay(300);
    
   }
